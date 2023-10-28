@@ -12,7 +12,6 @@ const {
     GraphQLNonNull
 } = graphql;
 
-// graphql types
 const BookType = new GraphQLObjectType({
     name: 'Book',
     fields: () => ({
@@ -22,7 +21,6 @@ const BookType = new GraphQLObjectType({
         author: {
             type: AuthorType,
             resolve(parent, args){
-                //return authors.find(author => author.id === parent.authorId)
                 return Author.findById(parent.authorId)
             }
         }
@@ -38,15 +36,12 @@ const AuthorType = new GraphQLObjectType({
         books: {
             type: new GraphQLList(BookType),
             resolve(parent,args){
-                //return books.filter(book => book.authorId === parent.id)
                 return Book.find({authorId: parent.id})
             }
         }
     })
 });
 
-
-// root query types
 const RootQuery = new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
@@ -54,9 +49,6 @@ const RootQuery = new GraphQLObjectType({
             type: BookType,
             args: { id: { type: GraphQLID } },
             resolve(parent, args) {
-                // code to get data from database or other sources
-                //const matchingBook = books.find(book => book.id === args.id);
-                //return matchingBook;
                 return Book.findById(args.id)
             }
         },
@@ -64,21 +56,18 @@ const RootQuery = new GraphQLObjectType({
             type: AuthorType,
             args: {id:{type: GraphQLID}},
             resolve(parent, args){
-                //return authors.find(author => author.id === args.id)
                 return Author.findById(args.id)
             },
         },
         books: {
             type: new GraphQLList(BookType),
             resolve(parent, args){
-                //return books
                 return Book.find({});
             }
         },
         authors: {
             type: new GraphQLList(AuthorType),
             resolve(parent,args){
-                //return authors;
                 return Author.find({});
             }
         }
@@ -99,7 +88,6 @@ const Mutation = new GraphQLObjectType({
                     name: args.name,
                     age: args.age
                 });
-                // save to database with mongoose
                 return author.save();
             }
         },
